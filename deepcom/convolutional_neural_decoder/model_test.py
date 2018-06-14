@@ -4,7 +4,7 @@ from model import neural_decoder
 
 
 class NeuralCoderTest(tf.test.TestCase):
-  """Simple Test to make sure my codes do not break anything"""
+  """Simple Tests to make sure my poorly written codes do not break anything"""
 
   def testNeuralCoderConstruction(self):
     batch_size = 4
@@ -28,7 +28,7 @@ class NeuralCoderTest(tf.test.TestCase):
       [4, 10000, 1],
       outputs.get_shape().as_list())
 
-  def testShortequenceInput(self):
+  def testShortSequenceInput(self):
     batch_size = 4
     sequence_len = 1000
     inputs = tf.random_uniform(shape=(batch_size, sequence_len, 2))

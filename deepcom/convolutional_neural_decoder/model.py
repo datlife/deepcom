@@ -9,11 +9,11 @@ from tensorflow.python.keras.layers import Bidirectional, TimeDistributed
 
 
 def neural_decoder(inputs, is_training=False):
-  """
-  Architecture Definition of Neural Coder
+  """Neural Network Decoder Definition
 
   Args:
-    inputs:
+    inputs: - tf.Tensor - shape [batch, sequence_length, 2] represents the
+      noisy data.
     is_training:
 
   Returns:
