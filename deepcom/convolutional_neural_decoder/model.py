@@ -17,9 +17,9 @@ def neural_decoder(inputs, is_training=False):
     is_training:
 
   Returns:
-
+    x - tf. Tensor - shape [batch, sequence_length, 1] 
+      decoded output
   """
-
   x = Bidirectional(GRU(
     units=400,
     return_sequences=True,

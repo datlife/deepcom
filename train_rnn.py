@@ -14,7 +14,6 @@ def input_fn(inputs, labels, batch_size):
 
 def model_fn(inputs, labels, mode, params):
   """Define Training Pipeline for Neural Decoder"""
-
   is_training = (mode == tf.estimator.ModeKeys.TRAIN)
   decoded_signals = neural_decoder(inputs, is_training)
 
