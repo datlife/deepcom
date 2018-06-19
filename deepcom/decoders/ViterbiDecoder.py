@@ -18,6 +18,5 @@ def ViterbiDecoder(corrupted_signals, constrain_length, rate=1/2):
         coded_bits=coded_bits.astype(float), 
         trellis=trellis)
 
-  print(decoded_seqs)
   return decoded_seqs
 
