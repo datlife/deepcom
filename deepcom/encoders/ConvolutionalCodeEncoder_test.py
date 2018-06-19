@@ -30,14 +30,17 @@ def test_convolutional_code_encoder():
         coded_bits = encoder.encode(message_bits)
         encoded_sequences[idx] = coded_bits
 
+    # Test if generated message bit sequences is correct
     expected_msg_bit_sequences = np.array(
     [[0, 1, 0, 1, 1, 0, 0, 0, 0, 1], 
     [0, 0, 0, 1, 1, 0, 0, 1, 0, 0], 
     [1, 1, 0, 1, 0, 1, 1, 0, 0, 0], 
     [1, 1, 1, 0, 0, 1, 0, 1, 1, 0], 
     [0, 1, 1, 1, 0, 0, 0, 0, 0, 0]])
+
     assert np.all(np.asarray(msg_bit_sequences) == expected_msg_bit_sequences)
 
+    # Test if encoded message bit sequences is correct
     exptected_encoded_bits =  np.array(
     [[0, 0, 1, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1, 0, 1, 1, 1],
     [0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 0, 0, 0, 0],
@@ -47,5 +50,8 @@ def test_convolutional_code_encoder():
 
     assert np.all(np.asarray(encoded_sequences) == exptected_encoded_bits)
 
-    assert np.shape(msg_bit_sequences) == (NUM_SEQS, BLOCK_LEN)
-    assert np.shape(encoded_sequences) == (NUM_SEQS, (BLOCK_LEN + 2) * (CONSTRAINT_LEN - 1))
+    assert np.shape(msg_bit_sequences) == \
+           (NUM_SEQS, BLOCK_LEN)
+
+    assert np.shape(encoded_sequences) == \
+           (NUM_SEQS, (BLOCK_LEN + 2) * (CONSTRAINT_LEN - 1))
