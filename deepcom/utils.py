@@ -1,6 +1,25 @@
 import math
 import numpy as np
 
+#######################################
+# Noise Helper Function
+#######################################
+def corrupt_signal(input_signal, noise_type, sigma = 1.0, vv =5.0):
+    '''Simulate data corruption over a channel'''
+
+     # input_signal has to be a numpy array.
+    data_shape = input_signal.shape 
+    if noise_type == 'awgn':
+        noise = sigma * np.random.standard_normal(data_shape) # Define noise
+        corrupted_signal = 2.0*input_signal-1.0 + noise
+
+    elif noise_type == 't-dist':
+        noise = sigma * math.sqrt((vv-2)/vv) *np.random.standard_t(vv, size = data_shape)
+        corrupted_signal = 2.0*input_signal-1.0 + noise
+
+    return corrupted_signal
+
+
 def generate_random_binary_sequence(seq_len, p=0.5):
   """Generate message bits length `seq_len` of a random binary 
   sequence, where each bit picked is a one with probability p.
@@ -53,30 +72,3 @@ def g_matrix_generator(L, data_date):
 
   return np.array([dict_l_generator[L]])
 
-#######################################
-# Noise Helper Function
-#######################################
-def corrupt_signal(input_signal, noise_type, sigma = 1.0, vv =5.0):
-    '''Simulate data corruption over a channel'''
-
-     # input_signal has to be a numpy array.
-    data_shape = input_signal.shape 
-    if noise_type == 'awgn':
-        noise = sigma * np.random.standard_normal(data_shape) # Define noise
-        corrupted_signal = 2.0*input_signal-1.0 + noise
-
-    elif noise_type == 't-dist':
-        noise = sigma * math.sqrt((vv-2)/vv) *np.random.standard_t(vv, size = data_shape)
-        corrupted_signal = 2.0*input_signal-1.0 + noise
-
-    return corrupted_signal
-
-
-
-# # test bitstream_generator.py
-# def test_source_code_encoder():
-#     SEQ_LEN = 8 
-#     np.random.seed(2018)
-#     generated = np.random.randint(2, SEQ_LEN)
-#     expected = np.array([0, 0, 0, 1, 1, 0, 0, 0])
-#     assert np.all(generated == expected)
