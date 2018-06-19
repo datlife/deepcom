@@ -1,2 +1,2 @@
-from .model import convolutional_neural_decoder
-from .viterbi import viterbi_decoder
+from .NRSCDecoder import NRSCDecoder
+from .ViterbiDecoder import ViterbiDecoder
