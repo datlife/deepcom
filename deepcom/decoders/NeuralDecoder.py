@@ -8,7 +8,7 @@ from tensorflow.python.keras.layers import BatchNormalization
 from tensorflow.python.keras.layers import Bidirectional, TimeDistributed
 
 
-def neural_decoder(inputs, is_training=False):
+def convolutional_neural_decoder(inputs, is_training=False):
   """Neural Network Decoder Definition
 
   Args:
