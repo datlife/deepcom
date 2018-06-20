@@ -1,32 +1,20 @@
 """Similuate the Convolutional Encoder to encode message bits"""
 import numpy as np
 from commpy.channelcoding import convcode as cc
-from ..utils import g_matrix_generator
-
 
 class ConvolutionalCodeEncoder(object):
-  """Encode message using Convolutional Code Scheme
-
-  It generates sequences of parity bits from sequences of message bits
-    by a `convolution` operation:
-  
+  """Encode message bits using Convolutional Code Scheme
   """
-  def __init__(self, constraint_length, data_rate=1/2):
-    """Initialzie Encoder
+  def __init__(self, generator_matrix, memory, code_type='default'):
+    """Initialzie Convolution Code Encoder
 
     Args:
       constraint_length: 1D ndarray ints 
         The larger `constraint_length` K, the more times a particular 
         message bit is used when calculating parity bits.
-  
-      data_rate: 
+      data_rate: number of parity bits for each message bit
     """
-
-    memory = np.array([constraint_length - 1])
-    #  A Generator Matrix G for Conv. Code Encoder.
-    #  shape = 2-D arrays of ints (octal representation)
-    g_matrix = g_matrix_generator(constraint_length, data_rate)
-    self.trellis = cc.Trellis(memory, g_matrix)
+    self.trellis = cc.Trellis(memory, generator_matrix, code_type=code_type)
 
   def encode(self, message_bits):
     """Encode message bits
