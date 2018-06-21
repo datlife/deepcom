@@ -8,10 +8,8 @@ from .utils import awgn_channel
 def data_generator(inputs, labels, batch_size, shuffle=True):
     """Construct a data generator using tf.Dataset"""
     dataset  = tf.data.Dataset.from_tensor_slices((inputs, labels))
-    dataset  = dataset.map(prepdoce)
-    dataset  = dataset.shuffle(1000)
     dataset  = dataset.batch(batch_size)
-    dataset  = dataset.prefecth(1) 
+    dataset  = dataset.prefetch(buffer_size=tf.contrib.data.AUTOTUNE)
 
     return dataset    
     
@@ -29,17 +27,14 @@ def create_dataset(num_sequences, block_length, trellis, snr, seed):
         coded_bits = cp.channelcoding.conv_encode(ground_truth, trellis)
         noisy_bits = awgn_channel(coded_bits, snr)
 
-        # Ignore the last 4 bits
-        training_input = np.reshape(noisy_bits[: 2*block_length], (-1, 2))
-        
-        X.append(training_input)
+        # Ignore the last 4 bits        
+        X.append(noisy_bits[: 2*block_length])
         Y.append(ground_truth)
 
     np.random.seed()
 
-    X = np.array(X)
+    X = np.reshape(X, (-1, block_length, 2))
     Y = np.reshape(Y, (-1, block_length, 1))
-
     return X, Y
 
 
