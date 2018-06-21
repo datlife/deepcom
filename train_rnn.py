@@ -3,16 +3,13 @@ import argparse
 import numpy as np
 import tensorflow as tf
 from commpy.channelcoding import Trellis
-from sklearn.model_selection import train_test_split
 
 from deepcom.metrics import ber
-from deepcom.dataset import create_dataset
 from deepcom.NeuralDecoder import NRSCDecoder
+from deepcom.dataset import create_dataset, data_generator
 
 
 def main(args):
-
-
   #  Generator Matrix (octal representation)
   G = np.array([[0o7, 0o5]]) 
   M = np.array([3 - 1])
@@ -22,7 +19,7 @@ def main(args):
   # Generate Dataset for training/eval
   # ####################################
   X_train, Y_train = create_dataset(
-      num_sequences=20,
+      num_sequences=1000,
       block_length=args.block_length,
       trellis=trellis,
       snr=0.01,
@@ -52,11 +49,15 @@ def main(args):
       loss='binary_crossentropy',
       metrics=['acc'])
 
+
+  # ####################################
+  # Start Training/Eval Pipeline
+  # ####################################
   model.fit(
       X_train, 
-      Y_train,
+      Y_train, 
+      validation_split=0.2, 
       batch_size=args.batch_size)
-
 
 
 def parse_args():

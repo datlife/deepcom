@@ -15,7 +15,6 @@ def data_generator(inputs, labels, batch_size, shuffle=True):
     
 
 def create_dataset(num_sequences, block_length, trellis, snr, seed):
-
     X = []
     Y = []
     # Init seed
