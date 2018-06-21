@@ -1,22 +1,13 @@
 import math
 import numpy as np
+import commpy as cp
+import multiprocessing as mp
 
-
-def generate_message_bits(seq_len, p=0.5):
-  """Generate message bits length `seq_len` of a random binary 
-  sequence, where each bit picked is a one with probability p.
-
-  Args:
-    seq_len: - int - length of message bit
-    p - float - probability
-
-  Return:
-    seq: - 1D ndarray - represent a message bits
-  """
-  seq = np.zeros(seq_len)
-  for i in range(seq_len):
-    seq[i] = 1 if (np.random.random() < p) else 0
-  return seq
+def awgn_channel(input_signal, snr):
+    """Simulate data corruption over AWGN channel"""
+    signal = 2.0 * input_signal - 1.0
+    noise = snr * np.random.standard_normal(input_signal.shape) 
+    return signal + noise
 
 def corrupt_signal(input_signal, noise_type, sigma = 1.0,
                     vv =5.0, radar_power = 20.0, radar_prob = 5e-2, denoise_thd = 10.0,
