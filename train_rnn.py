@@ -1,7 +1,7 @@
 """Train a neural decoder"""
 import argparse
 import tensorflow as tf
-from deepcom.decoder import convolutional_neural_decoder
+from deepcom.NeuralDecoder import NRSCDecoder
 
 # SEED here
 
@@ -31,7 +31,7 @@ def input_fn(inputs, labels, batch_size):
 def model_fn(inputs, labels, mode, params):
   """Define Training Pipeline for Neural Decoder"""
   is_training = (mode == tf.estimator.ModeKeys.TRAIN)
-  decoded_signals = convolutional_neural_decoder(inputs, is_training)
+  decoded_signals = NRSCDecoder(inputs, is_training)
 
   # Compute Loss
   loss = (decoded_signals - inputs)**2
