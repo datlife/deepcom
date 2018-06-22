@@ -3,12 +3,6 @@ import numpy as np
 import commpy as cp
 import multiprocessing as mp
 
-def awgn_channel(input_signal, snr):
-    """Simulate data corruption over AWGN channel"""
-    signal = 2.0 * input_signal - 1.0
-    noise = snr * np.random.standard_normal(input_signal.shape) 
-    return signal + noise
-
 def generate_message_bits(seq_len, p=0.5):
     """Generate message bits length `seq_len` of a random binary 
     sequence, where each bit picked is a one with probability p.
@@ -32,9 +26,7 @@ def corrupt_signal(input_signal, noise_type, sigma = 1.0,
     '''Simulate data corruption over a channel
 
     Reference: Author's code
-
-    Args:
-    input_signal:
+    https://github.com/yihanjiang/Sequential-RNN-Decoder
 
     '''
 
@@ -150,3 +142,4 @@ def corrupt_signal(input_signal, noise_type, sigma = 1.0,
         corrupted_signal = 2.0*input_signal-1.0 + noise
 
     return corrupted_signal
+

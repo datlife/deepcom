@@ -1,7 +1,5 @@
 import tensorflow as tf
-# =============================
-# Define Metrics
-# =============================
+
 def ber(y, y_pred):
     """Measure Bit Error Rate (BER)
     
@@ -28,19 +26,7 @@ def bler(y, y_pred):
         bler - a tf.float - represents bit block error rate
             in a batch.
     """
-    assert y.shape.as_list() == y_pred.shape.as_list(), \
-    "Prediction and Ground truth must have same shape.\n"\
-    "GT:{0} Prediction:{1}".format(y.shape.as_list(), y_pred.shape.as_list())
-
-    errors = tf.where(y != y_pred)
-    bler = float(len(error[0])) / tf.size(y)
+    num_blocks_per_batch = tf.cast(tf.shape(y)[0], tf.int64)
+    hamming_distances =  tf.cast(tf.not_equal(y, tf.round(y_pred)), tf.int32)
+    bler = tf.count_nonzero(tf.reduce_sum(hamming_distances, axis=1)) / num_blocks_per_batch
     return bler
-
-# def accuracy(y, y_pred):
-
-#     # Make sure shapes are matched
-#     assert y.shape == y_pred.shape, \
-#     "Prediction and Ground truth must have same shape.\n"\
-#     "Expected:{0} Actual:{1}".format(y.shape, y_pred.shape)
-
-#     return np.sum(y == y_pred) / np.product(y.shape)
