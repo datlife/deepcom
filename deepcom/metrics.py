@@ -13,8 +13,8 @@ def ber(y, y_pred):
         ber - a tf.float - represents bit error rate
             in a batch.
     """
-    errors =  tf.cast(tf.where(y != y_pred), tf.int32)
-    ber = tf.reduce_sum(errors) / tf.size(y)
+    hamming_distances =  tf.cast(tf.not_equal(y, tf.round(y_pred)), tf.int32)
+    ber = tf.reduce_sum(hamming_distances) / tf.size(y)
     return ber
 
 def bler(y, y_pred):
