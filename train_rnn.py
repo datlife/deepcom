@@ -13,13 +13,12 @@ def parse_args():
   """Parse Arguments for training Neural-RSC"""
   args = argparse.ArgumentParser(description='Train a Neural Decoder')
   args.add_argument('--dataset_path', type=str, required=True)
-  args.add_argument('--batch_size', type=int, default=2)
-  args.add_argument('--block_length', type=int, default=100)
-  args.add_argument('--num_examples', type=int, default=12000)
+  args.add_argument('--batch_size', type=int, default=200)
   args.add_argument('--learning_rate', type=float, default=1e-3)
   return args.parse_args()
 
 def main(args):
+
   # ####################################
   # Load Dataset for training/eval
   # ####################################
