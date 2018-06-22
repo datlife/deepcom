@@ -46,11 +46,13 @@ def main(args):
   train_set = data_genenerator(X_train, Y_train, args.batch_size, shuffle=True)
   test_set = data_genenerator(X_test, Y_test, args.batch_size, shuffle=False)
 
+  print('Tracking training process at http://localhost:8000')
   model.fit(
       train_set.make_one_shot_iterator(), 
       steps_per_epoch= len(X_train) // args.batch_size, 
       validation_data=test_set.make_one_shot_iterator(),
       validation_steps= len(X_test) // args.batch_size,
+      callbacks=[tf.keras.callbacks.Tensorboard('./logs', write_graph=False)],
       epochs=5)
 
 if __name__ == '__main__':
