@@ -52,7 +52,7 @@ def main(args):
       steps_per_epoch= len(X_train) // args.batch_size, 
       validation_data=test_set.make_one_shot_iterator(),
       validation_steps= len(X_test) // args.batch_size,
-      callbacks=[tf.keras.callbacks.Tensorboard('./logs', write_graph=False)],
+      callbacks=[tf.keras.callbacks.TensorBoard('./logs', write_graph=False)],
       epochs=5)
 
 if __name__ == '__main__':
