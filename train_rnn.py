@@ -14,7 +14,7 @@ def parse_args():
   args.add_argument('--dataset_path', type=str, required=True)
 
   args.add_argument('--epochs', type=int, default=20)
-  args.add_argument('--batch_size', type=int, default=600)
+  args.add_argument('--batch_size', type=int, default=500)
   args.add_argument('--learning_rate', type=float, default=1e-3)
   args.add_argument('--dropout_rate', type=float, default=0.3)
 
@@ -61,7 +61,9 @@ def main(args):
 
   try:
     model.load_weights('%s/BiGRU.weights' % experiment_log)
-  except:
+    print('Pre-trained weights are loaded.')
+  except Exception as e:
+    print(e)
     pass
 
   model.fit(
@@ -77,3 +79,24 @@ def main(args):
 if __name__ == '__main__':
   arguments = parse_args()
   main(arguments)
+
+
+  # import numpy as np
+  # decoded_bits = model.predict(
+  #     test_set.make_one_shot_iterator(), 
+  #     steps=len(Y_test) // args.batch_size)
+  # decoded_bits = np.round(decoded_bits)
+
+  # original_bits = np.reshape(Y_test, (-1, 100)).astype(int)
+  # decoded_bits =  np.reshape(decoded_bits, (-1, 100)).astype(int)
+
+  # print(original_bits[0,:20])
+  # print(decoded_bits[0,:20])
+
+  # hamming_dist = np.sum(np.not_equal(original_bits, decoded_bits),axis=1)
+
+  # nn_ber = sum(hamming_dist) / np.product(np.shape(Y_test))
+  # nn_bler = np.count_nonzero(hamming_dist) / len(Y_test)
+  
+  # print(hamming_dist)
+  # print(nn_ber, nn_bler)

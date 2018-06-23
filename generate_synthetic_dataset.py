@@ -1,21 +1,24 @@
-"""This script generates synthetic data for training Neural 
-Decoder. 
+"""This script generates synthetic data for training/testing
+Neural Decoder. 
 
 Given a ground truth message bits Y, we simulates input signal
 passing through a Simple Modulation ( 0 --> 0, 1 --> 1 ) and 
 Additive White Gaussian Noise (AWGN) Channel to become X, input
 to the RNN (Neural) Decoder.
 
-Usage:
--------
+The output (X_train, Y_train, X_test, Y_test) will be saved into
+a pickle file in the same directory.
+
+Example Usage:
+--------------
 >>python generate_synthetic_dataset.py \
---num_training_sequences 120000 \
---num_testing_sequences  10000  \
 --snr 0 \
 --block_length 100 \
+--num_training_sequences 120000 \
+--num_testing_sequences  10000  \
 --num_cpu_cores 8 \
 --training_seed 2018 \
---testing_seed 1111 \
+--testing_seed 1111
 
 """
 import pickle
@@ -54,7 +57,7 @@ def run(args):
 
   print('Generating training data:')
   print('Numer of sequences: {} Block length={} SNR={}...\n'.format(
-    args.num_training_sequences, args.block_length, snr_train))  
+      args.num_training_sequences, args.block_length, snr_train))  
 
   X_train, Y_train = create_dataset(
       num_sequences=args.num_training_sequences,
@@ -66,7 +69,7 @@ def run(args):
 
   print('Generating testing data:')
   print('Numer of sequences: {} Block length={} SNR={}...\n'.format(
-    args.num_testing_sequences, args.block_length, args.snr))  
+      args.num_testing_sequences, args.block_length, args.snr))  
 
   X_test, Y_test = create_dataset(
       num_sequences=args.num_testing_sequences,
@@ -84,10 +87,24 @@ def run(args):
   # ####################################    
   filename = 'rnn_bl{}_snr{}.dataset'.format(args.block_length, snr_train)
   with open(filename, 'wb') as f:
-    pickle.dump([X_train, Y_train, X_test, Y_test], f)
+      pickle.dump([X_train, Y_train, X_test, Y_test], f)
     
   print('Dataset is saved to %s' % filename)
 
+
+def create_dataset(num_sequences, block_length, trellis, snr, seed, num_cpus=4):
+    # Init seed
+    np.random.seed(seed)
+    snr = snr + 10 * np.log10(1./2.)
+    sigma = np.sqrt(1. / (2. * 10 **(snr / 10.)))
+    with mp.Pool(processes=num_cpus) as pool:
+      X, Y = zip(*pool.starmap(func, 
+          [(block_length,trellis, sigma) for _ in range(num_sequences)]))
+
+    np.random.seed()
+    X = np.reshape(X, (-1, block_length, 2))
+    Y = np.reshape(Y, (-1, block_length, 1))
+    return X, Y
 
 
 def func(block_length, trellis, sigma):
@@ -98,6 +115,7 @@ def func(block_length, trellis, sigma):
         sigma = np.random.choice(sigma)
 
     ground_truth = generate_message_bits(block_length)
+
     # Simulates data sent over AWGN channel
     coded_bits = cp.channelcoding.conv_encode(ground_truth, trellis)
     noisy_bits = corrupt_signal(coded_bits, noise_type='awgn', sigma=sigma)
@@ -106,20 +124,6 @@ def func(block_length, trellis, sigma):
     input_signal = noisy_bits[: 2*block_length]
     return input_signal, ground_truth
 
-def create_dataset(num_sequences, block_length, trellis, snr, seed, num_cpus=4):
-    # Init seed
-    np.random.seed(seed)
-    snr = snr + 10 * np.log10(1./2.)
-    sigma = np.sqrt(1. / (2. * 10 **(snr / 10.)))
-
-    with mp.Pool(processes=num_cpus) as pool:
-      X, Y = zip(*pool.starmap(func, 
-        [(block_length,trellis, sigma) for _ in range(num_sequences)]))
-
-    np.random.seed()
-    X = np.reshape(X, (-1, block_length, 2))
-    Y = np.reshape(Y, (-1, block_length, 1))
-    return X, Y
 
 
 if __name__ == '__main__':

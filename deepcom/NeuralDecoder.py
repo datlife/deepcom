@@ -9,7 +9,7 @@ from tensorflow.python.keras.layers import BatchNormalization
 from tensorflow.python.keras.layers import Bidirectional, TimeDistributed
 
 
-def NRSCDecoder(x, is_training=False, num_layers=2, hidden_units=400):
+def NRSCDecoder(x, is_training=False, num_layers=2, hidden_units=400, dropout=0.5):
   """Definition of Neural Network Decoder for rate-1/2 (2 parity bits/ message bit)
   Recursive Systematic Convolutional Codes, aka "N-RSC" Decoder.
 
@@ -27,13 +27,13 @@ def NRSCDecoder(x, is_training=False, num_layers=2, hidden_units=400):
     x = Bidirectional(GRU(
       units=hidden_units,
       return_sequences=True,
-      trainable=is_training
+      trainable=is_training,
+      recurrent_dropout=dropout
     ))(x)
     x = BatchNormalization(trainable=is_training)(x)
 
   x = TimeDistributed(Dense(
-    units=1,
-    activation='sigmoid'),
+    units=1, activation='sigmoid'),
     trainable=is_training,
   )(x)
 
