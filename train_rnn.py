@@ -4,17 +4,19 @@ import pickle
 import numpy as np
 import tensorflow as tf
 
-from deepcom.metrics import ber, bler
-from deepcom.NeuralDecoder import NRSCDecoder
 from deepcom.dataset import data_genenerator
+from deepcom.NeuralDecoder import NRSCDecoder
+from deepcom.metrics import BER, BLER, TrainValTensorBoard
 
 
 def parse_args():
   """Parse Arguments for training Neural-RSC"""
   args = argparse.ArgumentParser(description='Train a Neural Decoder')
+  args.add_argument('--epochs', type=int, default=5)
   args.add_argument('--dataset_path', type=str, required=True)
   args.add_argument('--batch_size', type=int, default=200)
   args.add_argument('--learning_rate', type=float, default=1e-3)
+
   return args.parse_args()
 
 def main(args):
@@ -38,7 +40,7 @@ def main(args):
   model.compile(
       optimizer=tf.keras.optimizers.Adam(args.learning_rate), 
       loss='binary_crossentropy',
-      metrics=[ber, bler])
+      metrics=[BER, BLER])
 
   # ####################################
   # Start Training/Eval Pipeline
@@ -46,14 +48,25 @@ def main(args):
   train_set = data_genenerator(X_train, Y_train, args.batch_size, shuffle=True)
   test_set = data_genenerator(X_test, Y_test, args.batch_size, shuffle=False)
 
-  print('Tracking training process at http://localhost:8000')
+  # Summary training logs (loss, ber, bler) every epoch.
+  summary = TrainValTensorBoard('./logs', write_graph=False)
+  backup  = tf.keras.callbacks.ModelCheckpoint(
+      './model.weights',
+      monitor='val_BER', 
+      save_best_only=True, 
+      save_weights_only=True,
+      period=1,
+      mode='max')
+
   model.fit(
       train_set.make_one_shot_iterator(), 
       steps_per_epoch= len(X_train) // args.batch_size, 
       validation_data=test_set.make_one_shot_iterator(),
       validation_steps= len(X_test) // args.batch_size,
-      callbacks=[tf.keras.callbacks.TensorBoard('./logs', write_graph=False)],
-      epochs=5)
+      callbacks=[summary, backup],
+      epochs=args.epochs)
+
+  print('Training is completed.')
 
 if __name__ == '__main__':
   arguments = parse_args()
