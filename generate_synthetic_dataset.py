@@ -13,8 +13,8 @@ Example Usage:
 --------------
 >>python generate_synthetic_dataset.py \
 --snr 0 \
---block_length 100 \
---num_training_sequences 120000 \
+--block_length 1000 \
+--num_training_sequences 0 \
 --num_testing_sequences  10000  \
 --num_cpu_cores 8 \
 --training_seed 2018 \
@@ -50,34 +50,36 @@ def run(args):
   M = np.array([3 - 1])
   trellis = Trellis(M, G, feedback=0o7, code_type='rsc')
 
+  X_train, Y_train, X_test, Y_test = [], [], [] ,[]
   # ####################################
   # Generate Dataset for training/eval
   # ####################################
-  snr_train = min(min(args.snr), 1)
+  if args.num_training_sequences > 0:
+    snr_train = min(min(args.snr), 1)
+    print('Generating training data:')
+    print('Numer of sequences: {} Block length={} SNR={}...\n'.format(
+        args.num_training_sequences, args.block_length, snr_train))  
 
-  print('Generating training data:')
-  print('Numer of sequences: {} Block length={} SNR={}...\n'.format(
-      args.num_training_sequences, args.block_length, snr_train))  
+    X_train, Y_train = create_dataset(
+        num_sequences=args.num_training_sequences,
+        block_length=args.block_length,
+        trellis=trellis,
+        snr=snr_train,
+        seed=args.training_seed,
+        num_cpus=args.num_cpu_cores)
 
-  X_train, Y_train = create_dataset(
-      num_sequences=args.num_training_sequences,
-      block_length=args.block_length,
-      trellis=trellis,
-      snr=snr_train,
-      seed=args.training_seed,
-      num_cpus=args.num_cpu_cores)
+  if args.num_testing_sequences > 0:
+    print('Generating testing data:')
+    print('Numer of sequences: {} Block length={} SNR={}...\n'.format(
+        args.num_testing_sequences, args.block_length, args.snr))  
 
-  print('Generating testing data:')
-  print('Numer of sequences: {} Block length={} SNR={}...\n'.format(
-      args.num_testing_sequences, args.block_length, args.snr))  
-
-  X_test, Y_test = create_dataset(
-      num_sequences=args.num_testing_sequences,
-      block_length=args.block_length,
-      trellis=trellis,
-      snr=args.snr,
-      seed=args.testing_seed,
-      num_cpus=args.num_cpu_cores)
+    X_test, Y_test = create_dataset(
+        num_sequences=args.num_testing_sequences,
+        block_length=args.block_length,
+        trellis=trellis,
+        snr=args.snr,
+        seed=args.testing_seed,
+        num_cpus=args.num_cpu_cores)
 
   print('Number of training sequences {}'.format(len(X_train)))
   print('Number of testing sequences {}\n'.format(len(X_test)))
@@ -85,7 +87,8 @@ def run(args):
   # ####################################
   # Save data into pickle object
   # ####################################    
-  filename = 'rnn_bl{}_snr{}.dataset'.format(args.block_length, snr_train)
+  filename = 'rnn_{}k_bl{}_snr0.dataset'.format(
+      int(args.num_training_sequences  / 1000), args.block_length)
   with open(filename, 'wb') as f:
       pickle.dump([X_train, Y_train, X_test, Y_test], f)
     
