@@ -15,6 +15,8 @@ def parse_args():
   args.add_argument('--dataset_path', type=str, required=True)
   args.add_argument('--batch_size', type=int, default=200)
   args.add_argument('--learning_rate', type=float, default=1e-3)
+  args.add_argument('--num_layers', type=int, default=2)
+  args.add_argument('--num_hidden_units', type=int, default=400)
 
   return args.parse_args()
 
@@ -32,7 +34,7 @@ def main(args):
   # Define Neural Decoder Model
   # ####################################
   inputs = tf.keras.Input(shape=(None, 2))
-  outputs = NRSCDecoder(inputs, is_training=True)
+  outputs = NRSCDecoder(inputs, is_training=True, num_layers=args.num_layers, hidden_units=args.num_hidden_units)
   model = tf.keras.Model(inputs, outputs)
 
   model.summary()
@@ -48,7 +50,9 @@ def main(args):
   test_set = data_genenerator(X_test, Y_test, args.batch_size, shuffle=False)
 
   # Summary training logs (loss, ber, bler) every epoch.
-  summary = TrainValTensorBoard('./logs', write_graph=False)
+  summary = TrainValTensorBoard(
+    './logs/Bi-GRU-{}-{}'.format(args.num_layers, args.num_hidden_units), 
+    write_graph=False)
   backup  = tf.keras.callbacks.ModelCheckpoint(
       './model.weights',
       monitor='val_BER', 
