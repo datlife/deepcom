@@ -9,12 +9,12 @@ from tensorflow.python.keras.layers import BatchNormalization
 from tensorflow.python.keras.layers import Bidirectional, TimeDistributed
 
 
-def NRSCDecoder(inputs, is_training=False):
+def NRSCDecoder(x, is_training=False, num_layers=2, hidden_units=400):
   """Definition of Neural Network Decoder for rate-1/2 (2 parity bits/ message bit)
   Recursive Systematic Convolutional Codes, aka "N-RSC" Decoder.
 
   Args:
-    inputs: - tf.Tensor - shape [batch, sequence_length, 2] represents the
+    x: - tf.Tensor - shape [batch, sequence_length, 2] represents the
       noisy signals.
     is_training: - a boolean
 
@@ -22,21 +22,14 @@ def NRSCDecoder(inputs, is_training=False):
     x - tf. Tensor - shape [batch, sequence_length, 1] 
       decoded output
   """
-  x = Bidirectional(GRU(
-    units=400,
-    return_sequences=True,
-    trainable=is_training
-  ))(inputs)
 
-  x = BatchNormalization(trainable=is_training)(x)
-
-  x = Bidirectional(GRU(
-    units=400,
-    return_sequences=True,
-    trainable=is_training
-  ))(x)
-
-  x = BatchNormalization(trainable=is_training)(x)
+  for _ in range(num_layers):
+    x = Bidirectional(GRU(
+      units=hidden_units,
+      return_sequences=True,
+      trainable=is_training
+    ))(x)
+    x = BatchNormalization(trainable=is_training)(x)
 
   x = TimeDistributed(Dense(
     units=1,
