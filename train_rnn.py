@@ -1,7 +1,6 @@
 """Train a neural decoder"""
 import argparse
 import pickle
-import numpy as np
 import tensorflow as tf
 
 from deepcom.dataset import data_genenerator
