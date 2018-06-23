@@ -9,11 +9,11 @@ to the RNN (Neural) Decoder.
 Usage:
 -------
 >>python generate_synthetic_dataset.py \
---num_training_sequences 1000 \
---num_testing_sequences  1000  \
---snr_test 0 1 2 3 4 5 6 \
+--num_training_sequences 120000 \
+--num_testing_sequences  10000  \
+--snr 0 \
 --block_length 100 \
---num_cpu_cores 4 \
+--num_cpu_cores 8 \
 --training_seed 2018 \
 --testing_seed 1111 \
 
@@ -37,7 +37,7 @@ def parse_args():
   args.add_argument('--num_testing_sequences', type=int, default=0)
   args.add_argument('--training_seed', type=int, default=2018)
   args.add_argument('--testing_seed', type=int, default=1111)
-  args.add_argument('--snr_test', type=float,  nargs="*", default=[0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0])
+  args.add_argument('--snr', type=float,  nargs="*", default=[0.0, 1.0])
   return args.parse_args()
 
 
@@ -50,9 +50,12 @@ def run(args):
   # ####################################
   # Generate Dataset for training/eval
   # ####################################
-  snr_train = min(min(args.snr_test), 1)
+  snr_train = min(min(args.snr), 1)
 
-  print('Generating training data...\n')
+  print('Generating training data:')
+  print('Numer of sequences: {} Block length={} SNR={}...\n'.format(
+    args.num_training_sequences, args.block_length, snr_train))  
+
   X_train, Y_train = create_dataset(
       num_sequences=args.num_training_sequences,
       block_length=args.block_length,
@@ -61,12 +64,15 @@ def run(args):
       seed=args.training_seed,
       num_cpus=args.num_cpu_cores)
 
-  print('Generating testing data....\n')
+  print('Generating testing data:')
+  print('Numer of sequences: {} Block length={} SNR={}...\n'.format(
+    args.num_testing_sequences, args.block_length, args.snr))  
+
   X_test, Y_test = create_dataset(
       num_sequences=args.num_testing_sequences,
       block_length=args.block_length,
       trellis=trellis,
-      snr=args.snr_test,
+      snr=args.snr,
       seed=args.testing_seed,
       num_cpus=args.num_cpu_cores)
 
@@ -82,6 +88,24 @@ def run(args):
     
   print('Dataset is saved to %s' % filename)
 
+
+
+def func(block_length, trellis, sigma):
+    """Helper function to generate a pair of (input, label)
+    for training Neural Decoder.
+    """
+    if type(sigma) is np.ndarray:
+        sigma = np.random.choice(sigma)
+
+    ground_truth = generate_message_bits(block_length)
+    # Simulates data sent over AWGN channel
+    coded_bits = cp.channelcoding.conv_encode(ground_truth, trellis)
+    noisy_bits = corrupt_signal(coded_bits, noise_type='awgn', sigma=sigma)
+    
+    # Ignore the last 4 bits        
+    input_signal = noisy_bits[: 2*block_length]
+    return input_signal, ground_truth
+
 def create_dataset(num_sequences, block_length, trellis, snr, seed, num_cpus=4):
     # Init seed
     np.random.seed(seed)
@@ -96,23 +120,6 @@ def create_dataset(num_sequences, block_length, trellis, snr, seed, num_cpus=4):
     X = np.reshape(X, (-1, block_length, 2))
     Y = np.reshape(Y, (-1, block_length, 1))
     return X, Y
-
-
-def func(block_length, trellis, sigma):
-    """Function to help generate a pair of (input, label)
-    for training Neural Decoder.
-    """
-    if type(sigma) is np.ndarray:
-        sigma = np.random.choice(sigma)
-
-    ground_truth = generate_message_bits(block_length)
-    # Simulates data sent over AWGN channel
-    coded_bits = cp.channelcoding.conv_encode(ground_truth, trellis)
-    noisy_bits = corrupt_signal(coded_bits, noise_type='awgn', sigma=sigma)
-    
-    # Ignore the last 4 bits        
-    input_signal = noisy_bits[: 2*block_length]
-    return input_signal, ground_truth
 
 
 if __name__ == '__main__':
