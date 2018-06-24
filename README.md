@@ -41,29 +41,32 @@ python generate_synthetic_dataset.py \
 ```
 
 * Train the network
-```
-# For GPU
-python train_rnn.py \
---dataset ./rnn_12k_bl100_snr0.dataset \
---batch_size 200
---epochs 50
---dropout_Rate 0.7
+  * For GPU supported machine
+    ```
+    python train_rnn.py \
+    --dataset ./rnn_12k_bl100_snr0.dataset \
+    --batch_size 200
+    --epochs 50
+    --dropout_Rate 0.7
+    ```
+  * For CPU, properly take a long time to converge
+    ```
+    python train_rnn.py \
+    --dataset ./rnn_12k_bl100_snr0.dataset \
+    --batch_size 4
+    --epochs 50
+    --dropout_Rate 0.7
+    ```
 
-# For CPU, properly take a long time to converge
-python train_rnn.py \
---dataset ./rnn_12k_bl100_snr0.dataset \
---batch_size 4
---epochs 50
---dropout_Rate 0.7
-```
-
-* Benchmark the result
-```
-python evaluate.py \
---checkpoint_dir ./reports/logs/BiGRU-2-400::dropout0.7::epochs-50
---dataset ./rnn_12k_bl100_snr0.dataset \
---batch_size 200 \
-```
+* Benchmark the result, there are two ways
+  * Use a script to only benchmark the Neural Decoder (over multiple SNRs).
+    ```
+    python evaluate.py \
+    --checkpoint_dir ./reports/logs/BiGRU-2-400::dropout0.7::epochs-50
+    --dataset ./rnn_12k_bl100_snr0.dataset \
+    --batch_size 200 \
+    ```
+   * Use an existing benchmark notebook in `reports/benchmark.ipynb` 
 
 ## Result
 ---
