@@ -1,30 +1,29 @@
+"""Contains metrics to monitor during training/evaluation"""
 import tensorflow as tf
 
 def BER(y, y_pred):
-    """Measure Bit Error Rate (BER)
-    
-    Args:
-        y - tf.Tensor - shape (batch_size, K, 1)
-        y_pred - tf.Tensor - shape (batch_size, K, 1)
+  """Measure Bit Error Rate (BER)
+  Args:
+    y - tf.Tensor - shape (batch_size, K, 1)
+    y_pred - tf.Tensor - shape (batch_size, K, 1)
 
-    Returns:
-        ber - a tf.float - represents bit error rate
-            in a batch.
-    """
-    hamming_distances =  tf.cast(tf.not_equal(y, tf.round(y_pred)), tf.int32)
-    ber = tf.reduce_sum(hamming_distances) / tf.size(y)
-    return ber
+  Returns:
+    ber - a tf.float - represents bit error rate
+        in a batch.
+  """
+  hamming_distances =  tf.cast(tf.not_equal(y, tf.round(y_pred)), tf.int32)
+  ber = tf.reduce_sum(hamming_distances) / tf.size(y)
+  return ber
 
 def BLER(y, y_pred):
     """Measure Bit Block Error Rate (BER)
-    
     Args:
-        y - tf.Tensor - shape (batch_size, K, 1)
-        y_pred - tf.Tensor - shape (batch_size, K, 1)
+      y - tf.Tensor - shape (batch_size, K, 1)
+      y_pred - tf.Tensor - shape (batch_size, K, 1)
 
     Returns:
-        bler - a tf.float - represents bit block error rate
-            in a batch.
+      bler - a tf.float - represents bit block error rate
+          in a batch.
     """
     num_blocks_per_batch = tf.cast(tf.shape(y)[0], tf.int64)
     hamming_distances =  tf.cast(tf.not_equal(y, tf.round(y_pred)), tf.int32)
@@ -32,8 +31,7 @@ def BLER(y, y_pred):
     return bler
 
 class TrainValTensorBoard(tf.keras.callbacks.TensorBoard):
-    """
-    Helper to Track Training and Evel into one graph
+    """Custom Tensorboard Callback to plot training and testing into one graph.
     https://stackoverflow.com/questions/47877475/keras-tensorboard-plot-train-and-validation-scalars-in-a-same-figure
     """
     def __init__(self, log_dir='./logs', **kwargs):
