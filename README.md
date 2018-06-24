@@ -27,7 +27,43 @@ Block Length = 1000         |  Block Length = 1000
 
 ## Reproduce the result - Step by Step
 
-@TODO
+* Generate synthetic data for training/testing
+```shell
+# This script will generate a pickle file `rnn_12k_bl100_snr0.dataset`
+python generate_synthetic_dataset.py \
+--snr 0 \
+--block_length 100 \
+--num_training_sequences 12000\
+--num_testing_sequences  10000  \
+--num_cpu_cores 8 \
+--training_seed 2018 \
+--testing_seed 1111
+```
+
+* Train the network
+```
+# For GPU
+python train_rnn.py \
+--dataset ./rnn_12k_bl100_snr0.dataset \
+--batch_size 200
+--epochs 50
+--dropout_Rate 0.7
+
+# For CPU, properly take a long time to converge
+python train_rnn.py \
+--dataset ./rnn_12k_bl100_snr0.dataset \
+--batch_size 4
+--epochs 50
+--dropout_Rate 0.7
+```
+
+* Benchmark the result
+```
+python evaluate.py \
+--checkpoint_dir ./reports/logs/BiGRU-2-400::dropout0.7::epochs-50
+--dataset ./rnn_12k_bl100_snr0.dataset \
+--batch_size 200 \
+```
 
 ## Result
 ---
