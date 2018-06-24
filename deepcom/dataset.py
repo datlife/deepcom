@@ -15,7 +15,7 @@ def data_genenerator(x, y, batch_size, shuffle=True):
   Return
     dataset - a tf.data.Dataset
   """
-  dataset = tf.data.Dataset.from_tensor_slices((X, Y))
+  dataset = tf.data.Dataset.from_tensor_slices((x, y))
   dataset = dataset.prefetch(batch_size)
   if shuffle:
     dataset = dataset.shuffle(1000)
