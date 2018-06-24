@@ -5,9 +5,9 @@ This repository is an implmentation of "*Communication Algorithms via Deep Learn
 This paper claims that a Recurrent Neural Network can **learn from data to decode** noisy coded signal over Additive White Gaussian Noise (AWGN) Channel **as good as** Viterbi and BCJR algorithm. 
 
 
-Block Length = 1000         |  Block Length = 1000 
+Bit Error Rate(BER)   |  Block Error Rate(BLER)
 :-------------------------:|:-------------------------:
-![](reports/images/ber_block_length_1000_snr0.png)| ![](reports/images/bler_block_length_1000_snr0.png)
+![](reports/images/ber_bl100_snr0.png)| ![](reports/images/bler_bl100_snr0.png)
 
 ## Network Architecture:
 
@@ -22,12 +22,14 @@ Block Length = 1000         |  Block Length = 1000
   
 * For example, the paper uses `r=1/2` and block length `c=2K`. Then `SNR_{train} =min(SNR_{test}, 0)`.
 
-## Example
+## Example.
+
 * I have written a notebook to train a Neural Decoder and compare with the Viterbi Decoder (using CommPy library). [Here](https://colab.research.google.com/drive/1kHtV3seHqyQfnssdEtbpRSUwIKhIDL93)
 
-## Reproduce the result - Step by Step
+## Reproduce the result yourself.
 
 * Generate synthetic data for training/testing. This script will generate a pickle file `rnn_12k_bl100_snr0.dataset`
+
     ```shell
     python generate_synthetic_dataset.py \
     --snr 0 \
@@ -41,30 +43,30 @@ Block Length = 1000         |  Block Length = 1000
 
 * Train the network
   * For GPU supported machine
-    ```
-    python train_rnn.py \
-    --dataset ./rnn_12k_bl100_snr0.dataset \
-    --batch_size 200
-    --epochs 50
-    --dropout_Rate 0.7
-    ```
+  ```
+  python train_rnn.py \
+  --dataset ./rnn_12k_bl100_snr0.dataset \
+  --batch_size 200
+  --epochs 50
+  --dropout_Rate 0.7
+  ```
   * For CPU, properly take a long time to converge
-    ```
-    python train_rnn.py \
-    --dataset ./rnn_12k_bl100_snr0.dataset \
-    --batch_size 4
-    --epochs 50
-    --dropout_Rate 0.7
-    ```
+  ```
+  python train_rnn.py \
+  --dataset ./rnn_12k_bl100_snr0.dataset \
+  --batch_size 4
+  --epochs 50
+  --dropout_Rate 0.7
+  ```
 
 * Benchmark the result, there are two ways
   * Use a script to only benchmark the Neural Decoder (over multiple SNRs).
-    ```
-    python evaluate.py \
-    --checkpoint_dir ./reports/logs/BiGRU-2-400::dropout0.7::epochs-50
-    --dataset ./rnn_12k_bl100_snr0.dataset \
-    --batch_size 200 \
-    ```
+  ```
+  python evaluate.py \
+  --checkpoint_dir ./reports/logs/BiGRU-2-400::dropout0.7::epochs-50
+  --dataset ./rnn_12k_bl100_snr0.dataset \
+  --batch_size 200 \
+  ```
    * Use an existing benchmark notebook in `reports/benchmark.ipynb` 
 
 ## Result
