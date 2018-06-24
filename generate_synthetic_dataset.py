@@ -23,12 +23,10 @@ Example Usage:
 """
 import pickle
 import argparse
-import multiprocessing as mp
 
 import numpy as np
-import commpy as cp
 from commpy.channelcoding import Trellis
-from deepcom.utils import generate_message_bits, corrupt_signal
+from deepcom.dataset import create_dataset
 
 def parse_args():
   """Parse Arguments for training Neural-RSC."""
@@ -87,40 +85,6 @@ def run(args):
   with open(filename, 'wb') as f:
     pickle.dump([X_train, Y_train, X_test, Y_test], f)
   print('Dataset is saved to %s' % filename)
-
-
-def create_dataset(num_sequences, block_length, trellis, snr, seed, num_cpus=4):
-  """Generate synthetic message bits for training RNN"""
-  # Init seed
-  np.random.seed(seed)
-  snr = snr + 10 * np.log10(1./2.)
-  sigma = np.sqrt(1. / (2. * 10 **(snr / 10.)))
-  with mp.Pool(processes=num_cpus) as pool:
-    result = pool.starmap(
-        func,
-        [(block_length, trellis, sigma) for _ in range(num_sequences)])
-    X, Y = zip(*result)
-  np.random.seed()
-  X = np.reshape(X, (-1, block_length, 2))
-  Y = np.reshape(Y, (-1, block_length, 1))
-  return X, Y
-
-
-def func(block_length, trellis, sigma):
-  """Helper function to generate a pair of (input, label)
-  for training Neural Decoder.
-  """
-  if isinstance(sigma, np.ndarray):
-    sigma = np.random.choice(sigma)
-  ground_truth = generate_message_bits(block_length)
-
-  # Simulates data sent over AWGN channel
-  coded_bits = cp.channelcoding.conv_encode(ground_truth, trellis)
-  noisy_bits = corrupt_signal(coded_bits, noise_type='awgn', sigma=sigma)
-
-  # Ignore the last 4 bits
-  input_signal = noisy_bits[: 2*block_length]
-  return input_signal, ground_truth
 
 
 if __name__ == '__main__':

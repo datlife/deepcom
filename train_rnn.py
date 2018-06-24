@@ -57,17 +57,16 @@ def training_pipeline(args):
       metrics=[BER, BLER])
 
   # Attempt to load pretrained model if available.
-  if args.pretrained_model is not None:
-    try:
-      model_path = os.path.join(experiment_log, 'BiGRU.hdf5')
-      pretrained = tf.keras.models.load_model(
-          model_path,
-          custom_objects={'BER': BER, 'BLER': BLER})
-      model = pretrained
-      print('Pre-trained weights are loaded.')
-    except Exception as e:
-      print(e)
-      print('\nFailed to load pretrained model. Start training from stratch')
+  try:
+    model_path = os.path.join(experiment_log, 'BiGRU.hdf5')
+    pretrained = tf.keras.models.load_model(
+        model_path,
+        custom_objects={'BER': BER, 'BLER': BLER})
+    model = pretrained
+    print('Pre-trained weights are loaded.')
+  except Exception as e:
+    print(e)
+    print('\nFailed to load pretrained model. Start training from stratch')
 
   # ####################################
   # Start Training/Eval Pipeline
