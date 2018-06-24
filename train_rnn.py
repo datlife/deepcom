@@ -49,7 +49,9 @@ def training_pipeline(args):
       inputs,
       is_training=True,
       num_layers=args.num_layers,
-      hidden_units=args.num_hidden_units)
+      hidden_units=args.num_hidden_units,
+      dropout=args.dropout_rate)
+      
   model = tf.keras.Model(inputs, outputs)
   model.compile(
       optimizer=tf.keras.optimizers.Adam(args.learning_rate),
