@@ -1,7 +1,8 @@
 """Data Loader"""
+import multiprocessing as mp
+import numpy as np
 import tensorflow as tf
 import commpy as cp
-import multiprocessing as mp
 from .utils import corrupt_signal
 
 def data_genenerator(x, y, batch_size, shuffle=True):
