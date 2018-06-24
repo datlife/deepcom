@@ -1,4 +1,5 @@
-"""Evaluate a neural decoder"""
+"""Evaluate a neural decoder at multiple SNR (Signal to Noise) values.
+"""
 import os
 import argparse
 import pickle
@@ -17,23 +18,22 @@ def parse_args():
   """Parse Arguments for evaluating Neural-RSC"""
   args = argparse.ArgumentParser(description='Train a Neural Decoder')
   args.add_argument('--dataset', type=str, required=True)
-  args.add_argument('--logdir', type=str, required=True)
+  args.add_argument('--checkpoint_dir', type=str, required=True)
   args.add_argument('--batch_size', type=int, required=True)
-
   return args.parse_args()
 
 def main(args):
-  experiment_log = args.logdir
+  experiment_log = args.checkpoint_dir
   # ####################################
-  # Load Dataset for training/eval
+  # Load Dataset for Testing
   # ####################################
   with open(args.dataset, 'rb') as f:
-      _, _, X_test, Y_test = pickle.load(f)
+      _, _, X_test, Y_test = pickle.load(f)  # ignore trnaining
   print('Number of testing sequences {}\n'.format(len(X_test)))
-
-  # ####################################
+  
+  # #####################################
   # Load pre-trained Neural Decoder Model
-  # ####################################
+  # #####################################
   try:
     model_path = os.path.join(experiment_log, 'BiGRU.hdf5')
     print(model_path)
@@ -52,7 +52,8 @@ def main(args):
   M = np.array([3 - 1])         # Number of delay elements in the convolutional encoder
   trellis = Trellis(M, G, feedback=0o7, code_type='rsc')
 
-  labels = np.reshape(Y_test, (-1, 100)).astype(int)
+  block_length = np.shape(Y_test)[1]
+  labels = np.reshape(Y_test, (-1, block_length)).astype(int)
   pool = mp.Pool(processes=mp.cpu_count())
   try:
     # Test at multiple SNRs
@@ -73,24 +74,24 @@ def main(args):
       # #################################################################
       # BENCHMARK NEURAL DECODER 
       # #################################################################
-      Y = np.reshape(Y, (-1, 100, 1))
-      X = np.reshape(np.array(X)[:, :2*100], (-1, 100, 2))
-
+      Y = np.reshape(Y, (-1, block_length, 1))
+      X = np.reshape(np.array(X)[:, :2*block_length], (-1, block_length, 2))
       test_set = data_genenerator(X, Y, args.batch_size, shuffle=False)
       
       decoded_bits = model.predict(
           test_set.make_one_shot_iterator(), 
           steps=len(Y_test) // args.batch_size)
 
-      decoded_bits = np.reshape(np.round(decoded_bits), (-1, 100)).astype(int)
-      original_bits = np.reshape(Y, (-1, 100)).astype(int)
+      # Compute Hamming Distances between message bits and decoded bits
+      decoded_bits = np.reshape(np.round(decoded_bits), (-1, block_length)).astype(int)
+      original_bits = np.reshape(Y, (-1, block_length)).astype(int)
       hamming_dist = np.sum(np.not_equal(original_bits, decoded_bits),axis=1)
-      # Bit Error Rate
-      nn_ber = sum(hamming_dist) / np.product(np.shape(Y))
-      # Block Error Rate
-      nn_bler = np.count_nonzero(hamming_dist) / len(Y)
-      print('[SNR]={:.2f} [BER]={:5.7f} [BLER]={:5.7f}'.format(snr, nn_ber, nn_bler))
 
+      # Compute Bit Error Rate (BER) and Bit Block Error Rate (BLER)
+      ber = sum(hamming_dist) / np.product(np.shape(Y))
+      bler = np.count_nonzero(hamming_dist) / len(Y)
+      print('[SNR]={:.2f} [BER]={:5.7f} [BLER]={:5.7f}'.format(snr, ber, bler))
+      
   except Exception as e:
       print(e)
   finally:

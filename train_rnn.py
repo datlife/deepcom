@@ -23,7 +23,7 @@ def parse_args():
   args.add_argument('--num_hidden_units', type=int, default=400)
   return args.parse_args()
 
-def train(args):
+def training_pipeline(args):
 
   # Define path to save training log for visualization later
   experiment_log = './logs/BiGRU-{}-{}::dropout-{}::epochs-{}'.format(
@@ -76,7 +76,6 @@ def train(args):
       patience=3, 
       verbose=0, mode='auto')
 
-
   # ####################################
   # Start Training/Eval Pipeline
   # ####################################
@@ -94,4 +93,4 @@ def train(args):
 
 if __name__ == '__main__':
   arguments = parse_args()
-  train(arguments)
+  training_pipeline(arguments)
