@@ -26,11 +26,17 @@ This repository is an implmentation of "*Communication Algorithms via Deep Learn
   
 * For example, the paper uses `r=1/2` and block length `c=2K`. Then `SNR_{train} =min(SNR_{test}, 0)`.
 
-## (Recommended) IPython Notebook for training and benchmarking model with Viterbi Decoder.
+## Usage
+### Install dependencies
+```
+conda env create -f dependencies.yml
+source activate deepcom
+```
+### (Recommended) IPython Notebook for training and benchmarking model with Viterbi Decoder.
 
 * [reproduce_result.ipynb](reproduce_result.ipynb): A Jypyter notebook demonstrates how to train a Neural Decoder and compare  the performance with  Viterbi Decoder.
 
-## (Optional) Steps to preproduce the result yourself.
+### (Optional) Steps to preproduce the result yourself.
 
 * Generate synthetic data for training/testing. This script will generate a pickle file `rnn_12k_bl100_snr0.dataset`
 
