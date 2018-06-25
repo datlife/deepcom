@@ -67,7 +67,7 @@ source activate deepcom
   ```
   * For CPU, properly take a long time to converge
   ```
-  python train_rnn.py \
+  python train.py \
   --dataset ./rnn_12k_bl100_snr0.dataset \
   --batch_size 4
   --epochs 50
