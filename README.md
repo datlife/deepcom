@@ -28,7 +28,7 @@ This repository is an implmentation of "*Communication Algorithms via Deep Learn
 
 ## (Recommended) IPython Notebook for training and benchmarking model with Viterbi Decoder.
 
-* [reproduce_result.ipynb](reproduce_result.ipynb): A Jypyter notebook demonstrates how to train a Neural Decoder and compare  the performance with the Viterbi: 
+* [reproduce_result.ipynb](reproduce_result.ipynb): A Jypyter notebook demonstrates how to train a Neural Decoder and compare  the performance with  Viterbi Decoder.
 
 ## (Optional) Steps to preproduce the result yourself.
 
