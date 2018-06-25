@@ -4,10 +4,7 @@ This repository is an implmentation of "*Communication Algorithms via Deep Learn
 
 This paper claims that a Recurrent Neural Network can **learn from data to decode** noisy coded signal over Additive White Gaussian Noise (AWGN) Channel **as good as** Viterbi and BCJR algorithm. 
 
-
-Bit Error Rate(BER)   |  Block Error Rate(BLER)
-:-------------------------:|:-------------------------:
-![](reports/images/ber_bl100_snr0.png)| ![](reports/images/bler_bl100_snr0.png)
+<p align="center">![](reports/result_conv_code.png)</p>
 
 ## Network Architecture:
 
