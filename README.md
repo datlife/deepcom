@@ -1,11 +1,11 @@
 # Communication Algorithms via Deep Learning
 
 
+This repository is an implmentation of "*Communication Algorithms via Deep Learning*". Paper: https://arxiv.org/abs/1805.09317. Here is the current result:
+
 <p align="center">
   <img src=reports/result_conv_code.png />
 </p>
-
-This repository is an implmentation of "*Communication Algorithms via Deep Learning*". Paper: https://arxiv.org/abs/1805.09317.
 
  * This paper claims that a Recurrent Neural Network can **learn from data to decode** noisy coded signal over Additive White Gaussian Noise (AWGN) Channel **as good as** Viterbi and BCJR algorithm. 
 
@@ -15,7 +15,9 @@ This repository is an implmentation of "*Communication Algorithms via Deep Learn
   <img src=reports/network_architecture.png />
 </p>
 
-* **Why Bi-directional, and not uni-directional, RNN?** Similar to dynamic programming, it usually consists of a forward and backward steps. The Bi-directional RNN architecture allows the network to learn the feature representation in both ways.
+* **Why Bi-directional, and not uni-directional, RNN?** Similar to dynamic programming, it usually consists of a forward and backward steps. The Bi-directional RNN architecture allows the network to learn the feature representation in both direction. I demonstrated a fail case, when using Uni-directional RNN, in [`unidirection_fail_not_converge.ipynb`](reports/unidirection_fail_not_converge.ipynb) notebook.
+
+![](reports/results/week2_unidirectional_failed_to_converge.png)
 
 * **Proper training data matters.** In addition, the paper provides an emperical method to determine the Signal-to-Noise (SNR) for generating training dataset. It helps the network generalize better during testing. Given message bit sequence `K`, transmitted codeword sequence of length `c` and data rate `r`. Then, `SNR_train` is computed as:
 
@@ -26,7 +28,7 @@ This repository is an implmentation of "*Communication Algorithms via Deep Learn
 
 ## (Recommended) IPython Notebook for training and benchmarking model with Viterbi Decoder.
 
-* [reproduce_result.ipynb](reproduce_result.ipynb): A Jypyter notebook demonstrates how to train a Neural Decoder and compare  the performance with the Viterbi: 
+* [reproduce_result.ipynb](reproduce_result.ipynb): A Jypyter notebook demonstrates how to train a Neural Decoder and compare  the performance with  Viterbi Decoder.
 
 ## (Optional) Steps to preproduce the result yourself.
 
