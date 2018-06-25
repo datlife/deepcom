@@ -20,7 +20,7 @@ source activate deepcom
 
 * [reproduce_result.ipynb](reproduce_result.ipynb): A Jypyter notebook demonstrates how to train a Neural Decoder and compare  the performance with  Viterbi Decoder.
 
-#### 3. (Optional) Steps to preproduce the result yourself.
+#### 3. (Optional) Steps to reproduce the result yourself.
 * Please look at the bottom of this README file.
 
 ## Network Architecture:
