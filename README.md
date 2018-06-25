@@ -11,12 +11,12 @@ This repository is an implmentation of "*Communication Algorithms via Deep Learn
 
 ## Usage
 
-### 1. Install dependencies
+#### 1. Install dependencies
 ```
 conda env create -f dependencies.yml
 source activate deepcom
 ```
-### 2. (Recommended) IPython Notebook for training and benchmarking model with Viterbi Decoder.
+#### 2. (Recommended) IPython Notebook for training and benchmarking model with Viterbi Decoder.
 
 * [reproduce_result.ipynb](reproduce_result.ipynb): A Jypyter notebook demonstrates how to train a Neural Decoder and compare  the performance with  Viterbi Decoder.
 
