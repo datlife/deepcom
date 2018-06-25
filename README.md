@@ -11,7 +11,9 @@ This repository is an implmentation of "*Communication Algorithms via Deep Learn
 
 ## Network Architecture:
 
-[IMAGE]
+<p align="center">
+  <img src=reports/network_architecture.png />
+</p>
 
 * **Why Bi-directional, and not uni-directional, RNN?** Similar to dynamic programming, it usually consists of a forward and backward steps. The Bi-directional RNN architecture allows the network to learn the feature representation in both ways.
 
