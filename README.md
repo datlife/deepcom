@@ -9,6 +9,20 @@ This repository is an implmentation of "*Communication Algorithms via Deep Learn
 
  * This paper claims that a Recurrent Neural Network can **learn from data to decode** noisy coded signal over Additive White Gaussian Noise (AWGN) Channel **as good as** Viterbi and BCJR algorithm. 
 
+## Usage
+
+### 1. Install dependencies
+```
+conda env create -f dependencies.yml
+source activate deepcom
+```
+### 2. (Recommended) IPython Notebook for training and benchmarking model with Viterbi Decoder.
+
+* [reproduce_result.ipynb](reproduce_result.ipynb): A Jypyter notebook demonstrates how to train a Neural Decoder and compare  the performance with  Viterbi Decoder.
+
+#### 3. (Optional) Steps to preproduce the result yourself.
+* Please look at the bottom of this README file.
+
 ## Network Architecture:
 
 <p align="center">
@@ -26,17 +40,8 @@ This repository is an implmentation of "*Communication Algorithms via Deep Learn
   
 * For example, the paper uses `r=1/2` and block length `c=2K`. Then `SNR_{train} =min(SNR_{test}, 0)`.
 
-## Usage
-### Install dependencies
-```
-conda env create -f dependencies.yml
-source activate deepcom
-```
-### (Recommended) IPython Notebook for training and benchmarking model with Viterbi Decoder.
 
-* [reproduce_result.ipynb](reproduce_result.ipynb): A Jypyter notebook demonstrates how to train a Neural Decoder and compare  the performance with  Viterbi Decoder.
-
-### (Optional) Steps to preproduce the result yourself.
+### Extra: Reproduce the result
 
 * Generate synthetic data for training/testing. This script will generate a pickle file `rnn_12k_bl100_snr0.dataset`
 
