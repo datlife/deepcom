@@ -4,10 +4,10 @@
 This repository is an implmentation of "*Communication Algorithms via Deep Learning*". Paper: https://arxiv.org/abs/1805.09317. Here is the current result:
 
 <p align="center">
-  <img src=reports/result_conv_code.png />
+  <img src=reports/result_conv_code.png width=85% />
 </p>
 
- * This paper claims that a Recurrent Neural Network can **learn from data to decode** noisy coded signal over Additive White Gaussian Noise (AWGN) Channel **as good as** Viterbi and BCJR algorithm. 
+ * This paper claims that a Recurrent Neural Network can **learn from data to decode** noisy signal over Additive White Gaussian Noise (AWGN) Channel **as good as** Viterbi and BCJR algorithm. 
 
 ## Usage
 
@@ -16,27 +16,30 @@ This repository is an implmentation of "*Communication Algorithms via Deep Learn
 conda env create -f dependencies.yml
 source activate deepcom
 ```
-#### 2. (Recommended) IPython Notebook for training and benchmarking model with Viterbi Decoder.
+#### 2. (Recommend) IPython Notebook for training/benchmarking RNN with Viterbi Decoder.
 
 * [reproduce_result.ipynb](reproduce_result.ipynb): A Jypyter notebook demonstrates how to train a Neural Decoder and compare  the performance with  Viterbi Decoder.
 
 #### 3. (Optional) Steps to reproduce the result yourself.
-* Please look at the bottom of this README file.
+
+* Please see at the bottom of this README file.
 
 ## Network Architecture:
 
 <p align="center">
-  <img src=reports/network_architecture.png />
+  <img src=reports/network_architecture.png width=70%/>
 </p>
 
 * **Why Bi-directional, and not uni-directional, RNN?** Similar to dynamic programming, it usually consists of a forward and backward steps. The Bi-directional RNN architecture allows the network to learn the feature representation in both direction. I demonstrated a fail case, when using Uni-directional RNN, in [`unidirection_fail_not_converge.ipynb`](reports/unidirection_fail_not_converge.ipynb) notebook.
 
-![](reports/results/week2_unidirectional_failed_to_converge.png)
+<p align="center">
+  <img src=reports/results/week2_unidirectional_failed_to_converge.png width=90%/>
+</p>
 
 * **Proper training data matters.** In addition, the paper provides an emperical method to determine the Signal-to-Noise (SNR) for generating training dataset. It helps the network generalize better during testing. Given message bit sequence `K`, transmitted codeword sequence of length `c` and data rate `r`. Then, `SNR_train` is computed as:
 
 <p align="center">
-<img src=https://latex.codecogs.com/gif.latex?%24%24SNR_%7Btrain%7D%3Dmin%5C%7BSNR_%7Btest%7D%2C%2010log_%7B10%7D%282%5E%7B2r%7D%20-%201%29%5C%7D%5Cspace%5Cspace%20%5Ctext%7B%28Appendix%20D%29%7D%24%24 /></p>
+<img src=https://latex.codecogs.com/gif.latex?%24%24SNR_%7Btrain%7D%3Dmin%5C%7BSNR_%7Btest%7D%2C%2010log_%7B10%7D%282%5E%7B2r%7D%20-%201%29%5C%7D%5Cspace%5Cspace%20%5Ctext%7B%28Appendix%20D%29%7D%24%24 width=35%/></p>
   
 * For example, the paper uses `r=1/2` and block length `c=2K`. Then `SNR_{train} =min(SNR_{test}, 0)`.
 
