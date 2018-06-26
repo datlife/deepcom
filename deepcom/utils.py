@@ -14,7 +14,7 @@ def corrupt_signal(input_signal, noise_type, sigma = 1.0, error_prob=0.01,
   """
   data_shape = input_signal.shape  # input_signal has to be a numpy array.
   if noise_type == 'bsc':
-    corruptted_signal = cp.channels.bsc(input_signal, error_prob)
+    corrupted_signal = cp.channels.bsc(input_signal, error_prob)
 
   elif noise_type == 'awgn':
     noise = sigma * np.random.standard_normal(data_shape) # Define noise
