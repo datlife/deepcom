@@ -13,8 +13,8 @@ Example Usage:
 --------------
 >>python generate_synthetic_dataset.py \
 --snr 0 \
---block_length 1000 \
---num_training_sequences 12000\
+--block_length 100 \
+--num_training_sequences 120000 \
 --num_testing_sequences  10000  \
 --num_cpu_cores 8 \
 --training_seed 2018 \
