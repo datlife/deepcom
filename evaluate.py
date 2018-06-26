@@ -1,4 +1,9 @@
 """Evaluate a neural decoder at multiple SNR (Signal to Noise) values.
+
+python evaluate.py \
+--checkpoint_dir ./reports/logs/BiGRU-2-400::dropout-0.3::epochs-50 \
+--dataset ./rnn_120k_bl100_snr0.dataset \
+--batch_size 600
 """
 import os
 import argparse
@@ -56,8 +61,7 @@ def main(args):
   labels = np.reshape(Y_test, (-1, block_length)).astype(int)
   pool = mp.Pool(processes=mp.cpu_count())
   try:
-    # Test at multiple SNRs
-    SNRs  = np.linspace(0, 7.0, 4)
+    SNRs  = np.linspace(0, 7.0, 8)
     for snr in SNRs:
       # Compute noise variance `sigma`
       snr_linear = snr + 10 * np.log10(1./2.)

@@ -3,18 +3,18 @@
 Example Usage:
 
 # For CPU
->> python train_rnn.py \
---dataset ./rnn_0k_bl50_snr0.dataset \
---batch_size 4
---epochs 50
---dropout_Rate 0.7
+>> python train.py \
+--dataset ./rnn_0k_bl100_snr0.dataset \
+--batch_size 4 \
+--epochs 50 \
+--dropout_rate 0.7
 
 # For GPU
->> python train_rnn.py \
---dataset ./rnn_120k_bl50_snr0.dataset \
---batch_size 500
---epochs 50
---dropout_Rate 0.7
+>> python train.py \
+--dataset ./rnn_120k_bl100_snr0.dataset \
+--batch_size 500 \
+--epochs 50 \
+--dropout_rate 0.3 
 """
 import os
 import argparse
