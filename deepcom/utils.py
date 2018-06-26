@@ -1,11 +1,11 @@
 """Contains helper functions for DeepCom
-Reference: Author's code
-https://github.com/yihanjiang/Sequential-RNN-Decoder
 """
 import math
 import numpy as np
+import commpy as cp
 
-def corrupt_signal(input_signal, noise_type, sigma = 1.0,
+
+def corrupt_signal(input_signal, noise_type, sigma = 1.0, error_prob=0.01,
                    vv =5.0, radar_power = 20.0, radar_prob = 5e-2, denoise_thd = 10.0,
                    modulate_mode = 'bpsk', snr_mixture = [0, 0, 0]):
   """Simulate data corruption over a channel
@@ -13,6 +13,9 @@ def corrupt_signal(input_signal, noise_type, sigma = 1.0,
   https://github.com/yihanjiang/Sequential-RNN-Decoder
   """
   data_shape = input_signal.shape  # input_signal has to be a numpy array.
+  if noise_type == 'bsc':
+    corruptted_signal = cp.channels.bsc(input_signal, error_prob)
+  
   if noise_type == 'awgn':
     noise = sigma * np.random.standard_normal(data_shape) # Define noise
     corrupted_signal = 2.0*input_signal-1.0 + noise

@@ -14,8 +14,8 @@ Example Usage:
 >>python generate_synthetic_dataset.py \
 --snr 0 \
 --block_length 100 \
---num_training_sequences 120000 \
---num_testing_sequences  10000  \
+--num_training_sequences 1200 \
+--num_testing_sequences  1000  \
 --num_cpu_cores 8 \
 --training_seed 2018 \
 --testing_seed 1111
@@ -33,12 +33,13 @@ def parse_args():
   args = argparse.ArgumentParser(
       description='Generate sythetic data for training neural decoder')
   args.add_argument('--block_length', type=int, default=100)
+  args.add_argument('--noise_type', type=str, default='awgn')
   args.add_argument('--num_cpu_cores', type=int, default=4)
   args.add_argument('--num_training_sequences', type=int, default=0)
   args.add_argument('--num_testing_sequences', type=int, default=0)
   args.add_argument('--training_seed', type=int, default=2018)
   args.add_argument('--testing_seed', type=int, default=1111)
-  args.add_argument('--snr', type=float, nargs="*", default=[0.0, 1.0])
+  args.add_argument('--snr', type=float, default=0.0)
   return args.parse_args()
 
 
@@ -53,17 +54,18 @@ def run(args):
   # Generate Dataset for training/eval
   # ####################################
   if args.num_training_sequences > 0:
-    snr_train = min(min(args.snr), 1)
     print('Generating training data:')
     print('Numer of sequences: {} Block length={} SNR={}...\n'.format(
-        args.num_training_sequences, args.block_length, snr_train))
+        args.num_training_sequences, args.block_length, args.snr))
+
     X_train, Y_train = create_dataset(
         num_sequences=args.num_training_sequences,
         block_length=args.block_length,
         trellis=trellis,
-        snr=snr_train,
+        snr=args.snr,
         seed=args.training_seed,
         num_cpus=args.num_cpu_cores)
+
   if args.num_testing_sequences > 0:
     print('Generating testing data:')
     print('Numer of sequences: {} Block length={} SNR={}...\n'.format(

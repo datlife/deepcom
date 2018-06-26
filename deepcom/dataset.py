@@ -46,7 +46,11 @@ def generate_message_bits(seq_len, p=0.5):
   return seq
 
 
-def create_dataset(num_sequences, block_length, trellis, snr, seed, num_cpus=4):
+def create_dataset(num_sequences, block_length, trellis, seed, 
+                   noise_type='awgn',
+                   snr=0.0,
+                   error_prob=0.01,
+                   num_cpus=4):
   """Generate synthetic message bits for training RNN"""
   # Init seed
   np.random.seed(seed)
@@ -55,7 +59,7 @@ def create_dataset(num_sequences, block_length, trellis, snr, seed, num_cpus=4):
   with mp.Pool(processes=num_cpus) as pool:
     result = pool.starmap(
         func,
-        [(block_length, trellis, sigma) for _ in range(num_sequences)])
+        [(block_length, trellis, noise_type, sigma, error_prob) for _ in range(num_sequences)])
     X, Y = zip(*result)
   np.random.seed()
   X = np.reshape(X, (-1, block_length, 2))
@@ -63,17 +67,20 @@ def create_dataset(num_sequences, block_length, trellis, snr, seed, num_cpus=4):
   return X, Y
 
 
-def func(block_length, trellis, sigma):
+def func(block_length, trellis, noise_type, sigma, error_prob):
   """Helper function to generate a pair of (input, label)
   for training Neural Decoder.
   """
-  if isinstance(sigma, np.ndarray):
-    sigma = np.random.choice(sigma)
-  ground_truth = generate_message_bits(block_length)
 
+  ground_truth = generate_message_bits(block_length)
+  kwargs = {
+    'noise_type': noise_type,
+    'sigma': sigma,
+    'error_prob': error_prob
+  }
   # Simulates data sent over AWGN channel
   coded_bits = cp.channelcoding.conv_encode(ground_truth, trellis)
-  noisy_bits = corrupt_signal(coded_bits, noise_type='awgn', sigma=sigma)
+  noisy_bits = corrupt_signal(coded_bits, **kwargs)
 
   # Ignore the last 4 bits
   input_signal = noisy_bits[: 2*block_length]
