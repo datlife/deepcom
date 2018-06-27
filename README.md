@@ -1,6 +1,6 @@
 # Communication Algorithms via Deep Learning
 
-This repository is an implmentation of "*Communication Algorithms via Deep Learning*" https://arxiv.org/abs/1805.09317.
+This repository is an implementation of "*Communication Algorithms via Deep Learning*" https://arxiv.org/abs/1805.09317.
 
 <p align="center">
   <img src=reports/overview_diagram.png width=80% />
