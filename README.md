@@ -22,7 +22,7 @@ This repository is an implmentation of "*Communication Algorithms via Deep Learn
 
 #### 1. Install dependencies
 ```
-conda env create -f dependencies.yml
+conda env create -f environment.yml
 source activate deepcom
 ```
 #### 2. (Recommend) IPython Notebook for training/benchmarking RNN with Viterbi Decoder.
@@ -45,15 +45,17 @@ source activate deepcom
   <img src=reports/results/week2_unidirectional_failed_to_converge.png width=90%/>
 </p>
 
-* **Proper training data matters.** In addition, the paper provides an emperical method to determine the Signal-to-Noise (SNR) for generating training dataset. It helps the network generalize better during testing. Given message bit sequence `K`, transmitted codeword sequence of length `c` and data rate `r`. Then, `SNR_train` is computed as:
+* **Proper training data matters.**  Given message bit sequence `K`, transmitted codeword sequence of length `c` and data rate `r`. Then, the paper provides an emperical method to select `SNR_train` as:
+<p align="center">
+<img src=https://latex.codecogs.com/gif.latex?%24%24SNR_%7Btrain%7D%3Dmin%5C%7BSNR_%7Btest%7D%2C%2010log_%7B10%7D%282%5E%7B2r%7D%20-%201%29%5C%7D%5Cspace%5Cspace%20%5Ctext%7B%28Appendix%20D%29%7D%24%24 width=33%/></p>
+  
+* For example, the paper uses `r=1/2` and block length `c=2K`. Then `SNR_{train} =min(SNR_{test}, 0)`. However, I ran an experiment and found that the model still convergesw when training model on higher SNR. In this example, we trained on SNR=4.0 and `SNR_test = [0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0]`:
 
 <p align="center">
-<img src=https://latex.codecogs.com/gif.latex?%24%24SNR_%7Btrain%7D%3Dmin%5C%7BSNR_%7Btest%7D%2C%2010log_%7B10%7D%282%5E%7B2r%7D%20-%201%29%5C%7D%5Cspace%5Cspace%20%5Ctext%7B%28Appendix%20D%29%7D%24%24 width=35%/></p>
-  
-* For example, the paper uses `r=1/2` and block length `c=2K`. Then `SNR_{train} =min(SNR_{test}, 0)`.
+  <img src=reports/result_bler_block_length_100_snr4.png width=90%/>
+</p>
 
-
-### Extra: Reproduce the result
+## Steps to reproduce the result
 
 * Generate synthetic data for training/testing. This script will generate a pickle file `rnn_12k_bl100_snr0.dataset`
 
