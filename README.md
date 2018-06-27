@@ -1,8 +1,10 @@
 # Communication Algorithms via Deep Learning
 
+This repository is an implmentation of "*Communication Algorithms via Deep Learning*" https://arxiv.org/abs/1805.09317.
 
-This repository is an implmentation of "*Communication Algorithms via Deep Learning*". Paper: https://arxiv.org/abs/1805.09317.:
-
+<p align="center">
+  <img src=reports/overview_diagram.png width=80% />
+</p>
 
  * Main Idea: This paper claims that a Recurrent Neural Network can **learn from data to decode** noisy signal over Additive White Gaussian Noise (AWGN) Channel **as good as** Viterbi and BCJR algorithm. 
 
