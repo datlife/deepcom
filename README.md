@@ -3,7 +3,7 @@
 This repository is an implementation of "*Communication Algorithms via Deep Learning*" https://arxiv.org/abs/1805.09317.
 
 <p align="center">
-  <img src=reports/overview_diagram.png width=80% />
+  <img src=reports/images/overview_diagram.png width=80% />
 </p>
 
  * Main Idea: This paper claims that a Recurrent Neural Network can **learn from data to decode** noisy signal over Additive White Gaussian Noise (AWGN) Channel **as good as** Viterbi and BCJR algorithm. 
@@ -11,13 +11,13 @@ This repository is an implementation of "*Communication Algorithms via Deep Lear
 
 * Reproduced Result (Test data = 10,000 sequences, K = 100):
 <p align="center">
-  <img src=reports/reproduced_result_k100.png width=90% />
+  <img src=reports/results/reproduced_result_k100.png width=90% />
 </p>
 
 
 * Paper Result (Appendix A, page 12):
 <p align="center">
-  <img src=reports/paper_result.png width=90% />
+  <img src=reports/images/paper_result.png width=90% />
 </p>
 
 ## Usage
@@ -38,7 +38,7 @@ source activate deepcom
 ## Network Architecture:
 
 <p align="center">
-  <img src=reports/network_architecture.png width=70%/>
+  <img src=reports/images/network_architecture.png width=70%/>
 </p>
 
 * **Why Bi-directional, and not uni-directional, RNN?** Similar to dynamic programming, it usually consists of a forward and backward steps. The Bi-directional RNN architecture allows the network to learn the feature representation in both direction. I demonstrated a fail case, when using Uni-directional RNN, in [`unidirection_fail_not_converge.ipynb`](reports/unidirection_fail_not_converge.ipynb) notebook.
@@ -54,7 +54,7 @@ source activate deepcom
 * For example, the paper uses `r=1/2` and block length `c=2K`. Then `SNR_{train} =min(SNR_{test}, 0)`. However, I ran an experiment and found that the model still converge when training model on higher SNR. In this example, we trained on SNR=4.0 and `SNR_test = [0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0]`:
 
 <p align="center">
-  <img src=reports/result_bler_block_length_100_snr4.png width=90%/>
+  <img src=reports/results/result_bler_block_length_100_snr4.png width=90%/>
 </p>
 
 ## Steps to reproduce the result
