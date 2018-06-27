@@ -51,7 +51,7 @@ source activate deepcom
 <p align="center">
 <img src=https://latex.codecogs.com/gif.latex?%24%24SNR_%7Btrain%7D%3Dmin%5C%7BSNR_%7Btest%7D%2C%2010log_%7B10%7D%282%5E%7B2r%7D%20-%201%29%5C%7D%5Cspace%5Cspace%20%5Ctext%7B%28Appendix%20D%29%7D%24%24 width=33%/></p>
   
-* For example, the paper uses `r=1/2` and block length `c=2K`. Then `SNR_{train} =min(SNR_{test}, 0)`. However, I ran an experiment and found that the model still convergesw when training model on higher SNR. In this example, we trained on SNR=4.0 and `SNR_test = [0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0]`:
+* For example, the paper uses `r=1/2` and block length `c=2K`. Then `SNR_{train} =min(SNR_{test}, 0)`. However, I ran an experiment and found that the model still converge when training model on higher SNR. In this example, we trained on SNR=4.0 and `SNR_test = [0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0]`:
 
 <p align="center">
   <img src=reports/result_bler_block_length_100_snr4.png width=90%/>
