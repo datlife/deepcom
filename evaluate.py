@@ -18,7 +18,6 @@ from deepcom.metrics import BER, BLER
 from deepcom.utils import corrupt_signal
 from deepcom.dataset import data_genenerator
 
-
 def parse_args():
   """Parse Arguments for evaluating Neural-RSC"""
   args = argparse.ArgumentParser(description='Train a Neural Decoder')
